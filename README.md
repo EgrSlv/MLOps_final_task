@@ -8,49 +8,20 @@
 
 ## Быстропроверки
 **Локальный запуск:**
+
 ```
+# Тесты
+python -m pytest tests/ -v
+```
+
+```
+# Поднять
 docker-compose -f architecture/docker-compose.yml up -d --build
 ```
 
 ```
-docker-compose -f architecture/docker-compose.yml down -v
-```
-
-```
+# Проверить работу
 docker ps
-```
-
-```
-curl localhost:8000/health  # {"status":"healthy","model_loaded":true}
-```
-
-**Проверки**
-```
-# Одиночное предсказание
-curl -X POST localhost:8000/predict -H "Content-Type: application/json" -d
-
-# '{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"}'
-```
-
-```
-# Batch предсказание
-curl -X POST localhost:8000/predict/batch -H "Content-Type: application/json" -d '[{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"},{"Pclass":1,"Sex":"female","Age":30.0,"SibSp":1,"Parch":0,"Fare":100.0,"Embarked":"C"}]'
-
-```
-
-```
-# Prometheus метрики
-curl localhost:8000/metrics
-```
-
-```
-# Cloud.ru
-curl https://mlops-finaltask-titanicml-api.containerapps.ru/health
-```
-
-```
-# Cloud.ru
-curl https://mlops-finaltask-titanicml-api.containerapps.ru/predict -X POST -H "Content-Type: application/json" -d '{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"}'
 ```
 
 ```
@@ -59,8 +30,55 @@ http://localhost:8080
 ```
 
 ```
-# Тесты
-python -m pytest tests/ -v
+# Прибить
+docker-compose -f architecture/docker-compose.yml down -v
+```
+
+**Проверки (+ API)**
+```
+# Проверка сервиса
+curl localhost:8000/health  # {"status":"healthy","model_loaded":true}
+
+# Проверка сервиса (API)
+curl https://mlops-finaltask-titanicml-api.containerapps.ru/health
+```
+
+```
+# Готовность модели
+curl localhost:8000/ready
+
+# Готовность модели (API)
+curl https://mlops-finaltask-titanicml-api.containerapps.ru/ready
+```
+
+```
+# Одиночное предсказание
+curl -X POST localhost:8000/predict -H "Content-Type: application/json" -d '{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"}'
+
+# Одиночное предсказание (API)
+curl -X POST https://mlops-finaltask-titanicml-api.containerapps.ru/predict -H "Content-Type: application/json" -d '{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"}'
+```
+
+```
+# Batch предсказание
+curl -X POST localhost:8000/predict/batch -H "Content-Type: application/json" -d '[{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"}, {"Pclass":1,"Sex":"female","Age":30.0,"SibSp":1,"Parch":0,"Fare":100.0,"Embarked":"C"}]
+
+# Batch предсказание (API)
+curl -X POST https://mlops-finaltask-titanicml-api.containerapps.ru/predict/batch -H "Content-Type: application/json" -d '[{"Pclass":3,"Sex":"male","Age":25.0,"SibSp":0,"Parch":0,"Fare":7.25,"Embarked":"S"},{"Pclass":1,"Sex":"female","Age":30.0,"SibSp":1,"Parch":0,"Fare":100.0,"Embarked":"C"}, {"Pclass":2,"Sex":"male","Age":60.0,"SibSp":0,"Parch":1,"Fare":30.0,"Embarked":"S"}]'
+
+```
+
+```
+# Prometheus метрики
+curl localhost:8000/metrics
+
+# Prometheus метрики (API)
+curl https://mlops-finaltask-titanicml-api.containerapps.ru/metrics | head -20
+```
+
+```
+# Swagger документация (в браузере)
+https://mlops-finaltask-titanicml-api.containerapps.ru/docs
 ```
 
 ## Уровень зрелости ML-системы
