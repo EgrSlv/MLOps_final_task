@@ -137,7 +137,7 @@ https://mlops-finaltask-titanicml-api.containerapps.ru/docs
 | **Data Cleaning** | Очистка Titanic-датасета (пропуски, категоризация) | pandas + sklearn |
 | **Feature Store** | Хранение и версионирование признаков | PostgreSQL |
 | **Experiment Tracking** | Логирование метрик, параметров, артефактов | MLflow |
-| **Model Training** | Обучение Random Forest Classifier | sklearn |
+| **Model Training** | Обучение GradientBoostingClassifier | sklearn |
 | **API Serving** | REST API для инференса модели | FastAPI + Uvicorn |
 | **Monitoring** | Метрики качества предсказаний и дрейфа | Prometheus |
 | **IaC** | Инфраструктура как код | Docker Compose |
@@ -204,8 +204,8 @@ https://mlops-finaltask-titanicml-api.containerapps.ru/docs
 
 Итеративный подход:
 1. **Baseline:** Logistic Regression (простейшая интерпретируемая модель)
-2. **Улучшение:** Random Forest Classifier
-3. **Оптимизация:** Random Forest Classifier с подбором гиперпараметров через GridSearchCV
+2. **Улучшение:** GradientBoostingClassifier
+3. **Оптимизация:** GradientBoostingClassifier с подбором гиперпараметров через GridSearchCV
 
 Итоговая модель выбирается по ROC-AUC на кросс-валидации (5-fold).
 
@@ -292,7 +292,7 @@ tests/                         # Тесты
 
 **Feature store в отдельном сервисе.** Спроектировал схему PostgreSQL для фича-стора (`feature_store/init.sql`), но разворачивать отдельный сервис в облаке не стал - для демо достаточно локального PostgreSQL в Docker Compose.
 
-**Catboost/ XGBoost -> Random Forest Classifier.** Отказался от более сложных моделей в пользу sklearn Random Forest Classifier - он даёт хорошее качество (Accuracy ~0.78, ROC-AUC ~0.80) без лишних зависимостей.
+**Catboost/ XGBoost -> GradientBoostingClassifier.** Отказался от более сложных моделей в пользу sklearn GradientBoostingClassifier - он даёт хорошее качество (Accuracy ~0.78, ROC-AUC ~0.80) без лишних зависимостей.
 
 ### Ключевые решения
 
@@ -443,7 +443,7 @@ tests/                         # Тесты
    │ Model Train │──── (запускается еженедельно)
    │ + MLflow    │
    └──────┬──────┘
-          │ train.py -> sklearn (Random Forest Classifier)
+          │ train.py -> sklearn (GradientBoostingClassifier)
           │ MLflow фиксирует метрики: Accuracy, ROC-AUC, F1
           ▼
    ┌─────────────┐
@@ -472,7 +472,7 @@ tests/                         # Тесты
 ### Поток данных
 
 1. **Airflow DAG `titanic_data_pipeline`** загружает Titanic-датасет (локально или с URL), очищает данные (удаление пропусков, категоризация признаков), сохраняет результат
-2. **Airflow DAG `titanic_training_pipeline`** читает очищенные данные, инженерит признаки (StandardScaler, LabelEncoder), обучает Random Forest Classifier, логирует метрики в MLflow, сохраняет модель в pickle
+2. **Airflow DAG `titanic_training_pipeline`** читает очищенные данные, инженерит признаки (StandardScaler, LabelEncoder), обучает GradientBoostingClassifier, логирует метрики в MLflow, сохраняет модель в pickle
 3. **FastAPI** при старте загружает последнюю обученную модель из `model.pkl`, через `/predict` возвращает предсказание и вероятность выживания
 4. **Prometheus** собирает метрики latency и количества запросов через `/metrics`
 5. **Drift detection** отслеживает PSI (Population Stability Index) - при превышении порога 0.1 сигнализирует о дрейфе данных
