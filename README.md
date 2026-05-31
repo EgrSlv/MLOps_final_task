@@ -88,7 +88,7 @@ https://mlops-finaltask-titanicml-api.containerapps.ru/docs
 | Критерий | Реализация |
 |---|---|
 | Версионирование кода | Git |
-| CI/CD пайплайн выкатки модели | Docker Compose |
+| CI/CD пайплайн развертывания модели | GitHub Actions + Cloud.ru Artifact Registry |
 | Feature store | PostgreSQL |
 | Сервинг модели через API | FastAPI + Uvicorn |
 | Мониторинг качества предсказаний | Prometheus + custom метрики |
