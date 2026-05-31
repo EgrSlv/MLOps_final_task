@@ -52,6 +52,36 @@ app = FastAPI(
 )
 
 
+@app.get("/")
+def root():
+    html = """
+    <html>
+    <head><title>Titanic ML API</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { color: #1a5276; }
+        .endpoint { background: #f0f0f0; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; }
+        a { color: #2980b9; }
+    </style></head>
+    <body>
+        <h1>ML-система предсказания выживаемости на Титанике</h1>
+        <p>Уровень зрелости: <strong>2</strong> (ML Automation)</p>
+        <p>Модель: GradientBoostingClassifier</p>
+        <h3>Эндпоинты:</h3>
+        <div class="endpoint">GET <code>/health</code> — статус сервиса</div>
+        <div class="endpoint">GET <code>/ready</code> — готовность модели</div>
+        <div class="endpoint">POST <code>/predict</code> — предсказание</div>
+        <div class="endpoint">POST <code>/predict/batch</code> — массовые предсказания</div>
+        <div class="endpoint">GET <code>/metrics</code> — Prometheus метрики</div>
+        <div class="endpoint">GET <code>/docs</code> — Swagger документация</div>
+        <hr>
+        <p>GitHub: <a href="https://github.com/EgrSlv/MLOps_final_task">EgrSlv/MLOps_final_task</a></p>
+    </body></html>
+    """
+    return Response(content=html, media_type="text/html")
+
+
 @app.get("/health", response_model=HealthStatus)
 def health():
     return HealthStatus(status="healthy", model_loaded=predictor is not None)
