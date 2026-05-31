@@ -3,18 +3,27 @@ from contextlib import asynccontextmanager
 
 from typing import List
 
-from fastapi import FastAPI, HTTPException
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from starlette.responses import Response
 
-from src.api.schemas import PassengerFeatures, PredictionResult, BatchPredictionResult, HealthStatus
+from fastapi import FastAPI, HTTPException
+
+from prometheus_client import (Counter,
+                               Histogram,
+                               generate_latest,
+                               CONTENT_TYPE_LATEST)
+
+from src.api.schemas import (PassengerFeatures,
+                             PredictionResult,
+                             BatchPredictionResult,
+                             HealthStatus)
 from src.models.predict import ModelPredictor
 
 
 logger = logging.getLogger(__name__)
 
 PREDICT_COUNTER = Counter("predictions_total", "Всего предсказаний", ["status"])
-PREDICT_LATENCY = Histogram("prediction_latency_seconds", "Задержка предсказания в секундах")
+PREDICT_LATENCY = Histogram("prediction_latency_seconds",
+                            "Задержка предсказания в секундах")
 
 
 predictor: ModelPredictor | None = None

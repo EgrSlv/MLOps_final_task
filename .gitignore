@@ -1,2 +1,6 @@
 .pytest_cache/
 __pycache__/
+data/mlflow/
+data/cleaned_titanic.csv
+data/features_titanic.csv
+data/target_titanic.csv

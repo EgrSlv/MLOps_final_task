@@ -34,8 +34,10 @@ def test_metrics_endpoint():
 
 def test_predict_batch_no_model():
     response = client.post("/predict/batch", json=[
-        {"Pclass": 3, "Sex": "male", "Age": 25.0, "SibSp": 0, "Parch": 0, "Fare": 7.25, "Embarked": "S"},
-        {"Pclass": 1, "Sex": "female", "Age": 30.0, "SibSp": 1, "Parch": 0, "Fare": 100.0, "Embarked": "C"},
+        {"Pclass": 3, "Sex": "male", "Age": 25.0, "SibSp": 0, "Parch": 0,
+         "Fare": 7.25, "Embarked": "S"},
+        {"Pclass": 1, "Sex": "female", "Age": 30.0, "SibSp": 1, "Parch": 0,
+         "Fare": 100.0, "Embarked": "C"},
     ])
     assert response.status_code in (200, 503)
     if response.status_code == 200:
